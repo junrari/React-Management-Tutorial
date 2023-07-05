@@ -8,35 +8,27 @@ import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 
-const customer = [{
-  'id': 1,
-  'image': 'https://picsum.photos/64/64/?random',
-  'name': '홍길원',
-  'birthday': '961222',
-  'gender': '남자',
-  'job': '대학생'
-},
-{
-  'id': 2,
-  'image': 'https://picsum.photos/64/64',
-  'name': '홍길투',
-  'birthday': '987654',
-  'gender': '여자',
-  'job': '대학생'
-},
-{
-  'id': 3,
-  'image': 'https://loremflickr.com/64/64',
-  'name': '홍길삼',
-  'birthday': '980004',
-  'gender': '남자',
-  'job': '백수'
-}
-]
 
 
-function App() {
+
+class App extends Component {
   
+  state = {
+    customers:""
+  };
+
+  componentDidMount() {
+    this.callApi()
+    .then(res => this.setState({customers:res}))
+    .catch(err => console.log(err));
+  }
+
+  callApi = async () => {
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  }
+  render(){
   return (
     <Paper>
         <Table>
@@ -51,13 +43,15 @@ function App() {
             </TableRow>
           </TableHead>
           <TableBody>
-          {customer.map(c=> {return (<Customer key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job}/>);})}        
+          {this.state.customers ? this.state.customers.map(c=> {return (<Customer key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job}/>);
+          }) : ""}        
        </TableBody>
         </Table>
        
       
     </Paper>
   );
+}
 }
 
 export default App;
